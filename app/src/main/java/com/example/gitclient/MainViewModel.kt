@@ -1,50 +1,50 @@
 package com.example.gitclient
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gitclient.data.CombinedData
-import com.example.gitclient.data.GitRepositories
-import com.example.gitclient.data.GitUsers
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.core.DataStatus
+import com.example.net.data.Content
+import com.example.repository.CombinedData
+import com.example.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: Repository): ViewModel() {
 
-    val users = MutableStateFlow(GitUsers())
-    val repositories = MutableStateFlow(GitRepositories())
+    var url: String by mutableStateOf("")
 
-    fun getUsers(login: String) = viewModelScope.launch {
-        repository.getUsers(login)
+    private val _content = MutableStateFlow<List<Content>>(listOf())
+    val content: StateFlow<List<Content>> get() = _content
+
+    private val _combinedData : MutableStateFlow<DataStatus<CombinedData>?> = MutableStateFlow(null)
+    val combinedData : StateFlow<DataStatus<CombinedData>?> get() = _combinedData
+
+    fun getCombinedData(login: String, name: String) = viewModelScope.launch {
+        repository.getCombinedData(login, name)
             .flowOn(Dispatchers.IO)
-            .catch {  }
+            .catch { e -> _combinedData.emit(DataStatus.Error(e.toString()))}
             .collect{ value ->
-                Log.d("ResultFlow", value.toString())
-                users.value = value
+                if (value.items.size > 0)
+                    _combinedData.emit(DataStatus.Success(CombinedData(items = value.items)))
+                else _combinedData.emit(DataStatus.Empty())
             }
     }
 
-    fun getRepositories(name: String) = viewModelScope.launch {
-        repository.getRepositories(name)
+    fun getContent(url: String) = viewModelScope.launch {
+        repository.getContent(url)
             .flowOn(Dispatchers.IO)
-            .catch {  }
+            .catch {}
             .collect{ value ->
-                Log.d("ResultFlow", value.toString())
-                repositories.value = value
-            }
-    }
-
-    fun getCombinedData() = viewModelScope.launch {
-        repository.getCombinedData()
-            .flowOn(Dispatchers.IO)
-            .catch {  }
-            .collect{ value ->
-                Log.d("ResultFlow", value.users.toString())
-                Log.d("ResultFlow", value.repositories.toString())
-                //repositories.value = value
+                _content.emit(value.sortedWith(compareBy({it.type}, {it.name})))
             }
     }
 }

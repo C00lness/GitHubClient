@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">GitClient</string>
+    <string name="SearchStartHeader">Поиск</string>
+    <string name="SearchStartMsg">Начните вводить поисковый запрос (от 3-х символов), чтобы увидеть результаты</string>
+    <string name="ErrorHeader">Упс...</string>
+    <string name="ErrorMsg">Либо у вас слабое интернет подключение, либо что-то сломалось у нас - тогда мы в курсе и уже работаем над этим</string>
+    <string name="EmptyHeader">Тут ничего нет</string>
+    <string name="EmptyMsg">Возможно чуть позже здесь что-то появится</string>
 </resources>

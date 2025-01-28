@@ -49,6 +49,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -57,9 +59,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //Retrofit
-    implementation (libs.retrofit2.retrofit)
-    implementation (libs.converter.gson)
+
 
     implementation (libs.gson)
     implementation (libs.okhttp)
@@ -68,4 +68,15 @@ dependencies {
     //Coin
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+
+    //Coil
+    implementation (libs.coil)
+    implementation(libs.coil.compose)
+
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(project(":net"))
+    implementation(project(":repository"))
+    implementation(project(":core"))
 }

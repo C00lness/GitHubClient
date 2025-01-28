@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "GitClient"
 include(":app")
- 
+include(":repository")
+include(":net")
+include(":core")
